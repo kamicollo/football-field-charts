@@ -3,11 +3,14 @@ library(data.table)
 library(RColorBrewer)
 
 #read in the table that contains individual contract terms with associated start/end dates
-terms = fread("~/coding/real-estate/terms.csv")
+terms = fread("~/coding/real-estate-football-charts/data/terms.csv")
+contracts = fread("~/coding/real-estate-football-charts/data/contracts.csv")
+
+
 
 #read in the table that contains monthly information for each term (SQM / rent income in a month)
 #add proper year/month columns to the dataframe
-PL = fread("~/coding/real-estate/monthly_data.csv") %>% 
+PL = fread("~/coding/real-estate-football-charts/data/monthly_data.csv") %>% 
   mutate(date = as.Date(strptime(paste0(month,"-01"), format="%Y-%m-%d"))) %>%
   mutate(year = year(date), month = month(date))
 
@@ -66,7 +69,8 @@ labels = chart_df %>% group_by(contract_id) %>% #group by contract
 
 ggplot(chart_df) + 
   #create rectangle geoms
-  geom_tile(aes(x=mid_point, y=contract_id, width=width, height=monthly_rent/max(monthly_rent), fill=extension)) + 
+  geom_tile(aes(x=mid_point, y=contract_id, width=width, height=0.8), fill="#e8e8e8") + 
+  geom_tile(aes(x=mid_point, y=contract_id, width=width, height=monthly_rent/max(monthly_rent)*0.8, fill=extension)) +
   #deal with axis labels
   ylab("") + xlab("Year") + theme_bw() + 
   #remove gridlines on Y-axis
